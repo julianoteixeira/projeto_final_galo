@@ -69,19 +69,32 @@
 # //////
 
 # ///////// do fernando zerati //////
+
 provider "aws" {
   region = "sa-east-1"
 }
 resource "aws_instance" "web" {
-  subnet_id     = "subnet-05d2f48a5e97f0b1a"
-  ami= "ami-054a31f1b3bf90920"
+  subnet_id = "subnet-0aa28325df0a8910d"
+  ami= "ami-07a33a473c28f00ed"
   instance_type = "t2.micro"
+  key_name = "treinamento_itau_turma2"
+  associate_public_ip_address = true
   root_block_device {
     encrypted = true
     volume_size = 8
   }
   tags = {
-    Name = "ec2-zerati-tf"
+    Name = "ec2-guilhermeab-tf"
   }
+}
+# https://www.terraform.io/docs/language/values/outputs.html
+output "instance_public_dns" {
+  value = [
+    aws_instance.web.public_dns, 
+    aws_instance.web.public_ip, 
+    aws_instance.web.private_ip,
+    "ssh -i ~/.ssh/id_rsa ubuntu@${aws_instance.web.public_ip}"
+  ]
+  description = "Mostra os IPs publicos e privados da maquina criada."
 }
 # /////
