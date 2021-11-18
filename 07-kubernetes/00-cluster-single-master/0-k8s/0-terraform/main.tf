@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "us-east-1"
+  region = "sa-east-1"
 }
 
 data "http" "myip" {
@@ -7,25 +7,39 @@ data "http" "myip" {
 }
 
 resource "aws_instance" "maquina_master" {
-  ami           = "ami-09e67e426f25ce0d7"
-  instance_type = "t2.medium"
-  key_name      = "treinamento-turma1_itau"
+  subnet_id = "subnet-0aa28325df0a8910d"
+  instance_type = "t2.micro"
+  key_name = "treinamento_itau_turma2"
+  vpc_security_group_ids = ["sg-05ebbe57543a1d0f9"]
+  associate_public_ip_address = true
+  root_block_device {
+    encrypted = true
+    volume_size = 8
+  }
+  ami           = "ami-0e66f5495b4efdd0f"
   tags = {
     Name = "k8s-master"
   }
-  vpc_security_group_ids = [aws_security_group.acessos_master_single_master.id]
+  #vpc_security_group_ids = [aws_security_group.acessos_master_single_master.id]
   depends_on = [
     aws_instance.workers,
   ]
 }
 
 resource "aws_instance" "workers" {
-  ami           = "ami-09e67e426f25ce0d7"
+  ami           = "ami-0e66f5495b4efdd0f"
   instance_type = "t2.micro"
-  key_name      = "treinamento-turma1_itau"
+  key_name      = "treinamento_itau_turma2"
   tags = {
     Name = "k8s-node-${count.index}"
   }
+  subnet_id = "subnet-0aa28325df0a8910d"
+  associate_public_ip_address = true
+  root_block_device {
+    encrypted = true
+    volume_size = 8
+  }
+  #vpc_security_group_ids = ["sg-05ebbe57543a1d0f9"]
   vpc_security_group_ids = [aws_security_group.acessos_workers_single_master.id]
   count         = 3
 }
@@ -40,25 +54,26 @@ resource "aws_security_group" "acessos_master_single_master" {
       from_port        = 22
       to_port          = 22
       protocol         = "tcp"
-      cidr_blocks      = ["${chomp(data.http.myip.body)}/32"]
+      #cidr_blocks      = ["${chomp(data.http.myip.body)}/32"]
+      cidr_blocks      = ["0.0.0.0/0"]
       ipv6_cidr_blocks = ["::/0"]
       prefix_list_ids = null,
       security_groups: null,
       self: null
     },
-    {
-      cidr_blocks      = []
-      description      = ""
-      from_port        = 0
-      ipv6_cidr_blocks = []
-      prefix_list_ids  = []
-      protocol         = "-1"
-      security_groups  = [
-        "sg-0de8412f761f70f50",
-      ]
-      self             = false
-      to_port          = 0
-    },
+    # {
+    #   cidr_blocks      = []
+    #   description      = ""
+    #   from_port        = 0
+    #   ipv6_cidr_blocks = []
+    #   prefix_list_ids  = []
+    #   protocol         = "-1"
+    #   #security_groups  = [
+    #   #  "sg-0de8412f761f70f50",
+    #   #]
+    #   self             = false
+    #   to_port          = 0
+    # },
     {
       cidr_blocks      = [
         "0.0.0.0/0",
@@ -104,7 +119,8 @@ resource "aws_security_group" "acessos_workers_single_master" {
       from_port        = 22
       to_port          = 22
       protocol         = "tcp"
-      cidr_blocks      = ["${chomp(data.http.myip.body)}/32"]
+      cidr_blocks      = ["0.0.0.0/0"]
+      #cidr_blocks      = ["${chomp(data.http.myip.body)}/32"]
       ipv6_cidr_blocks = ["::/0"]
       prefix_list_ids = null,
       security_groups: null,
@@ -118,7 +134,7 @@ resource "aws_security_group" "acessos_workers_single_master" {
       prefix_list_ids  = []
       protocol         = "-1"
       security_groups  = [
-        "sg-0c8c7bdac4e2dbfb7",
+        "${aws_security_group.acessos_master_single_master.id}",
       ]
       self             = false
       to_port          = 0
@@ -148,7 +164,7 @@ resource "aws_security_group" "acessos_workers_single_master" {
 # terraform refresh para mostrar o ssh
 output "maquina_master" {
   value = [
-    "master - ${aws_instance.maquina_master.public_ip} - ssh -i ~/Desktop/devops/treinamentoItau ubuntu@${aws_instance.maquina_master.public_dns}"
+    "master - ${aws_instance.maquina_master.public_ip} - ssh -i ~/.ssh/id_rsa ubuntu@${aws_instance.maquina_master.public_dns}"
   ]
 }
 
@@ -156,6 +172,6 @@ output "maquina_master" {
 output "aws_instance_e_ssh" {
   value = [
     for key, item in aws_instance.workers :
-      "worker ${key+1} - ${item.public_ip} - ssh -i ~/Desktop/devops/treinamentoItau ubuntu@${item.public_dns}"
+      "worker ${key+1} - ${item.public_ip} - ssh -i ~/.ssh/id_rsa ubuntu@${item.public_dns}"
   ]
 }
