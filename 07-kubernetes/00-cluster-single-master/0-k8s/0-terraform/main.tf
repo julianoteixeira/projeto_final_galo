@@ -39,8 +39,8 @@ resource "aws_instance" "workers" {
     encrypted = true
     volume_size = 8
   }
-  #vpc_security_group_ids = ["sg-05ebbe57543a1d0f9"]
-  vpc_security_group_ids = [aws_security_group.acessos_workers_single_master.id]
+  vpc_security_group_ids = ["sg-05ebbe57543a1d0f9"]
+  #vpc_security_group_ids = [aws_security_group.acessos_workers_single_master.id]
   count         = 3
 }
 
