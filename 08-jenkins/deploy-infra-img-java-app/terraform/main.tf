@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "us-east-1"
+  region = "sa-east-1"
 }
 
 data "http" "myip" {
@@ -7,9 +7,11 @@ data "http" "myip" {
 }
 
 resource "aws_instance" "dev_img_deploy_jenkins" {
-  ami           = "ami-09e67e426f25ce0d7"
+  associate_public_ip_address = true
+  ami                         = "ami-0e66f5495b4efdd0f"
+  subnet_id                   = "subnet-0aa28325df0a8910d"
   instance_type = "t2.micro"
-  key_name      = "chave-jenkins"
+  key_name      = "id_rsa"
   tags = {
     Name = "dev_img_deploy_jenkins"
   }
