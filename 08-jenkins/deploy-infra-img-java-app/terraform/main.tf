@@ -11,7 +11,7 @@ resource "aws_instance" "dev_img_deploy_jenkins" {
   ami                         = "ami-0e66f5495b4efdd0f"
   subnet_id                   = "subnet-0aa28325df0a8910d"
   instance_type = "t2.micro"
-  key_name      = "id_rsa"
+  key_name      = "treinamento_itau_turma2"
   tags = {
     Name = "dev_img_deploy_jenkins"
   }
