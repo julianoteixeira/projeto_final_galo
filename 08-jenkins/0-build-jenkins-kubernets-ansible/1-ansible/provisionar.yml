@@ -56,9 +56,9 @@
     - name: "Copia chave privada"
       copy:
         src: "~/.ssh/id_rsa"
-        dest: "/home/ubuntu/.ssh/id_rsa"
-        owner: ubuntu
-        group: ubuntu
+        dest: "/var/lib/jenkins/.ssh/id_rsa"
+        owner: jenkins
+        group: jenkins
         mode: '0400'  
 
 
