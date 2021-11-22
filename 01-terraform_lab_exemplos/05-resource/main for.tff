@@ -16,3 +16,11 @@ for_each = toset(["00","01","02"])
     Name = "ec2-${each.key}-tf"
   }
 }
+
+output "instance_public_dns" {
+  value = [
+    for key, item in aws_instance.web :
+      "item.public_ip:${item.public_ip} - item.private_ip:${item.private_ip} - item.public_dns:${item.public_dns}"
+  ]
+  description = "Mostra o DNS e os IPs publicos e privados da maquina criada."
+}

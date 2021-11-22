@@ -75,9 +75,10 @@ provider "aws" {
 }
 resource "aws_instance" "web" {
   subnet_id = "subnet-0aa28325df0a8910d"
-  ami= "ami-07a33a473c28f00ed"
+  ami= "ami-0e66f5495b4efdd0f"
   instance_type = "t2.micro"
   key_name = "treinamento_itau_turma2"
+  vpc_security_group_ids = ["sg-05ebbe57543a1d0f9"]
   associate_public_ip_address = true
   root_block_device {
     encrypted = true

@@ -8,9 +8,9 @@ data "http" "myip" {
 
 resource "aws_instance" "maquina_master" {
   subnet_id = "subnet-0aa28325df0a8910d"
-  instance_type = "t2.micro"
+  instance_type = "t2.medium"
   key_name = "treinamento_itau_turma2"
-  vpc_security_group_ids = ["sg-05ebbe57543a1d0f9"]
+  #vpc_security_group_ids = ["sg-05ebbe57543a1d0f9"]
   associate_public_ip_address = true
   root_block_device {
     encrypted = true
@@ -20,7 +20,7 @@ resource "aws_instance" "maquina_master" {
   tags = {
     Name = "k8s-master"
   }
-  #vpc_security_group_ids = [aws_security_group.acessos_master_single_master.id]
+  vpc_security_group_ids = [aws_security_group.acessos_master_single_master.id]
   depends_on = [
     aws_instance.workers,
   ]
@@ -28,7 +28,7 @@ resource "aws_instance" "maquina_master" {
 
 resource "aws_instance" "workers" {
   ami           = "ami-0e66f5495b4efdd0f"
-  instance_type = "t2.micro"
+  instance_type = "t2.medium"
   key_name      = "treinamento_itau_turma2"
   tags = {
     Name = "k8s-node-${count.index}"
@@ -39,17 +39,18 @@ resource "aws_instance" "workers" {
     encrypted = true
     volume_size = 8
   }
-  vpc_security_group_ids = ["sg-05ebbe57543a1d0f9"]
-  #vpc_security_group_ids = [aws_security_group.acessos_workers_single_master.id]
+  #vpc_security_group_ids = ["sg-05ebbe57543a1d0f9"]
+  vpc_security_group_ids = [aws_security_group.acessos_workers_single_master.id]
   count         = 3
 }
 
 resource "aws_security_group" "acessos_master_single_master" {
   name        = "acessos_master_single_master"
   description = "acessos_workers_single_master inbound traffic"
+  vpc_id =  "vpc-0fa62362063e97bfc"
 
   ingress = [
-    {
+      {
       description      = "SSH from VPC"
       from_port        = 22
       to_port          = 22
@@ -61,19 +62,55 @@ resource "aws_security_group" "acessos_master_single_master" {
       security_groups: null,
       self: null
     },
-    # {
-    #   cidr_blocks      = []
-    #   description      = ""
-    #   from_port        = 0
-    #   ipv6_cidr_blocks = []
-    #   prefix_list_ids  = []
-    #   protocol         = "-1"
-    #   #security_groups  = [
-    #   #  "sg-0de8412f761f70f50",
-    #   #]
-    #   self             = false
-    #   to_port          = 0
-    # },
+        {
+      description      = "liberando para kub-nginx"
+      from_port        = 8080
+      to_port          = 8080
+      protocol         = "tcp"
+      #cidr_blocks      = ["${chomp(data.http.myip.body)}/32"]
+      cidr_blocks      = ["0.0.0.0/0"]
+      ipv6_cidr_blocks = ["::/0"]
+      prefix_list_ids = null,
+      security_groups: null,
+      self: null
+    },
+    {
+      description      = "liberando para kub-nginx"
+      from_port        = 30000
+      to_port          = 30000
+      protocol         = "tcp"
+      #cidr_blocks      = ["${chomp(data.http.myip.body)}/32"]
+      cidr_blocks      = ["0.0.0.0/0"]
+      ipv6_cidr_blocks = ["::/0"]
+      prefix_list_ids = null,
+      security_groups: null,
+      self: null
+    },
+       {
+      description      = "liberando para kub-nginx"
+      from_port        = 3000
+      to_port          = 3000
+      protocol         = "tcp"
+      #cidr_blocks      = ["${chomp(data.http.myip.body)}/32"]
+      cidr_blocks      = ["0.0.0.0/0"]
+      ipv6_cidr_blocks = ["::/0"]
+      prefix_list_ids = null,
+      security_groups: null,
+      self: null
+    },
+    {
+      cidr_blocks      = []
+      description      = ""
+      from_port        = 0
+      ipv6_cidr_blocks = []
+      prefix_list_ids  = []
+      protocol         = "-1"
+      security_groups  = [
+        "sg-05ebbe57543a1d0f9",
+      ]
+      self             = false
+      to_port          = 0
+    },
     {
       cidr_blocks      = [
         "0.0.0.0/0",
@@ -112,6 +149,7 @@ resource "aws_security_group" "acessos_master_single_master" {
 resource "aws_security_group" "acessos_workers_single_master" {
   name        = "acessos_workers_single_master"
   description = "acessos_workers_single_master inbound traffic"
+  vpc_id =  "vpc-0fa62362063e97bfc"
 
   ingress = [
     {

@@ -3,7 +3,7 @@ terraform {
 }
 
 resource "aws_instance" "web" {
-  ami           = "ami-09e67e426f25ce0d7"
+  ami           = "ami-07a33a473c28f00ed"
   instance_type = "t2.micro"
   tags = {
     Name = "${var.nome}",
