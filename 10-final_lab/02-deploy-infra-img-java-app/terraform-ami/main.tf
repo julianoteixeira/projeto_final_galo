@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 resource "aws_ami_from_instance" "ami-g4" {
-  name               = "terraform-jenkins-${var.versao}"
+  name               = "ami-g4-${var.versao}"
   source_instance_id = var.resource_id
 }
 
