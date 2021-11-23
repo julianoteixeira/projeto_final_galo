@@ -108,9 +108,9 @@
     - copy: 
         src: "/Users/guilhermeandre/.ssh/id_rsa" 
         dest: "/var/lib/jenkins/.ssh/id_rsa" 
-        # owner: jenkins 
-        # group: jenkins 
-        # mode: '0400'
+        owner: jenkins 
+        group: jenkins 
+        mode: '0400'
         remote_src: false
 
     - name: "Permissao da chave"
