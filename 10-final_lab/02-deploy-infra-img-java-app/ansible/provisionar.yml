@@ -155,6 +155,7 @@
       copy:
         src: "docker/daemon.json"
         dest: "/etc/docker/daemon.json"
+        remote_src: true
       become: yes
 
     - name: "Restart docker"
