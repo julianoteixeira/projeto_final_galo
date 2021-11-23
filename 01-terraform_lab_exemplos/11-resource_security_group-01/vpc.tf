@@ -127,7 +127,7 @@ resource "aws_route_table_association" "d" {
 
 resource "aws_nat_gateway" "nat-g4" {
   allocation_id = aws_eip.eip-g4.id
-  subnet_id     = aws_subnet.sub-g4-terraform-2a-private.id
+  subnet_id     = aws_subnet.sub-g4-terraform-1a.id
 
   tags = {
     Name = "gw NAT"
@@ -135,6 +135,7 @@ resource "aws_nat_gateway" "nat-g4" {
 
   # To ensure proper ordering, it is recommended to add an explicit dependency
   # on the Internet Gateway for the VPC.
+  #depends_on eh opcional
   depends_on = [aws_internet_gateway.gtw-g4-terraform-01]
 }
 
