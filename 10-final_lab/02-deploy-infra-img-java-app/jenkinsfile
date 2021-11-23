@@ -9,22 +9,22 @@ pipeline {
         }
         stage('Build EC2') {
             steps {
-                sh "02-deploy-infra-img-java-app/deploy.sh"
+                sh "10-final_lab/02-deploy-infra-img-java-app/deploy.sh"
             }
         }
         stage('Test Nginx') {
             steps {
-                sh "02-deploy-infra-img-java-app/test.sh"
+                sh "10-final_lab/02-deploy-infra-img-java-app/test.sh"
             }
         }
         stage('Build AMI') {
             steps {
-                sh "02-deploy-infra-img-java-app/package-ami.sh"
+                sh "10-final_lab/02-deploy-infra-img-java-app/package-ami.sh"
             }
         }
         stage('Destroy Test EC2') {
             steps {
-                sh "02-deploy-infra-img-java-app/destroy.sh"
+                sh "10-final_lab/02-deploy-infra-img-java-app/destroy.sh"
             }
         }
     }
