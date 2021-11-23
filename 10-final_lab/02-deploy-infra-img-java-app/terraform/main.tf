@@ -19,8 +19,8 @@ resource "aws_instance" "dev_img_deploy" {
 }
 
 resource "aws_security_group" "acesso_dev_img" {
-  name        = "acesso_dev_img"
-  description = "acesso_dev_img inbound traffic"
+  name        = "acessos_dev_img"
+  description = "acessos_dev_img inbound traffic"
   vpc_id      = var.my_vpc_id
   
   ingress = [
