@@ -1,0 +1,117 @@
+- hosts: all
+  become: true
+
+  tasks:
+    - name: "Download pacote jenkins"
+      shell: wget -qO - https://pkg.jenkins.io/debian-stable/jenkins.io.key | apt-key add -
+
+    - name: "Configura hostname jenkins"
+      shell: hostname jenkins && echo "jenkins" > /etc/hostname
+      become: yes
+
+    - name: "Update apt"
+      shell: "apt-get update"
+
+    - name: "Instala mvn"
+      shell: "sudo apt install maven -y"
+
+    - name: "Instala unzip"
+      shell: "sudo apt install unzip -y"
+
+    # - name: "Instala awscli" #sandbox nao precisa
+    #   shell: "apt install awscli -y"
+      
+    - name: "Instala java"
+      shell: "apt install default-jdk -y"
+    
+    - name: "Install terraform passo 1" 
+      shell: sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl  
+      
+    - name: "Install terraform passo 2" 
+      shell: curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add - 
+      
+    - name: "Install terraform passo 3" 
+      shell: sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" 
+      
+    - name: "Install terraform passo 4" 
+      shell: sudo apt-get update && sudo apt-get install terraform -y
+
+    - name: "Instala ansible"
+      shell: "sudo apt install ansible -y"
+
+    - name: install packages required by docker
+      become: true
+      apt:
+        update_cache: yes
+        state: latest
+        name:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - gpg-agent
+        - software-properties-common
+
+    - name: add docker GPG key
+      become: true
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: add docker apt repo
+      become: true
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu bionic stable
+        state: present
+
+    - name: install docker
+      become: true
+      apt:
+        update_cache: yes
+        state: latest
+        name:
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
+
+    # https://www.jenkins.io/doc/book/installing/linux/
+    - name: "Add pacote jenkins"
+      shell: sudo sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
+    
+    - name: "Update apt"
+      shell: "apt-get update"
+
+    - name: "Instala jenkins"
+      shell: "apt-get install jenkins -y"
+
+    - name: Espera 30 segundos
+      wait_for: timeout=30
+
+    ## outra dorma reduzida de se fazer
+    # - shell: cat /var/lib/jenkins/secrets/initialAdminPassword
+    #   register: ps
+    # - debug: var=ps.stdout_lines
+
+    - shell: cat /var/lib/jenkins/secrets/initialAdminPassword
+      register: ps
+    - debug:
+        msg: "Segredo do jenkins: '{{ ps.stdout_lines }}' "
+        # msg: "Segredo do jenkins: '{{ ps.stderr_lines }}' " # quando quiser ver o erro
+      
+    ## outra forma reduzida de se fazer
+    - shell: cat /var/lib/jenkins/secrets/initialAdminPassword
+      register: ps
+    - debug: var=ps.stdout_lines
+    
+    - name: "mkdir"
+      shell: "mkdir /var/lib/jenkins/.ssh"
+
+    - copy: 
+        src: "/Users/guilhermeandre/.ssh/id_rsa" 
+        dest: "/var/lib/jenkins/.ssh/id_rsa" 
+        # owner: jenkins 
+        # group: jenkins 
+        # mode: '0400'
+        remote_src: false
+
+    - name: "Permissao da chave"
+      shell: "chown jenkins:jenkins /var/lib/jenkins/.ssh/id_rsa"
