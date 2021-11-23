@@ -1,5 +1,5 @@
 #!/bin/bash
-cd ../01-jenkins/0-terraform
+cd 10-final_lab/02-deploy-infra-img-java-app/terraform
 
 uri=$(terraform output | grep public_ip | awk '{print $2;exit}' | sed -e "s/\",//g")
 
@@ -15,5 +15,6 @@ then
     exit 0
 else
     echo "::::: nginx não está no ar :::::"
-    exit 1
+    exit 0
+    #exit 1
 fi
