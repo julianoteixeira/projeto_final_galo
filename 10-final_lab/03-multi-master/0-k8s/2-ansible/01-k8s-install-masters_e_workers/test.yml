@@ -1,0 +1,8 @@
+- hosts:
+  - ec2-k8s-m1
+  become: yes
+  tasks:
+    - shell: kubectl get nodes -o wide
+      register: ps
+    - debug:
+        msg: " '{{ ps.stdout_lines }}' "

@@ -1,0 +1,21 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone repo') {
+            steps {
+                git url: 'https://github.com/guiagb/treinamentoDevOps', branch: 'main'
+            }
+        }
+        stage('Build K8s') {
+            steps {
+                sh "10-final_lab/03-multi-master/0-k8s/deploy.sh"
+            }
+        }
+        stage('Test K8s') {
+            steps {
+                sh "10-final_lab/03-multi-master/0-k8s/test.sh"
+            }
+        }
+    }
+}
