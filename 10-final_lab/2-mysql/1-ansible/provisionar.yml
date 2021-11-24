@@ -1,0 +1,72 @@
+- hosts: all
+
+  environment:
+    DATABASE_URL: "mysql://localhost:3306/{{ lookup('env', 'DATABASE') }}?useTimezone=true&serverTimezone=UTC"
+    PASSWORD: "{{ lookup('env', 'PASSWORD') }}"
+    USER: "{{ lookup('env', 'USER') }}"
+  
+  become: yes
+
+  tasks:
+    - name: "Roda: sudo apt-get update"
+      become: true
+      apt:
+        upgrade: yes
+        update_cache: yes
+
+    - name: "Instala pacotes"
+      apt:
+        name: "{{ item }}"
+        state: latest
+      become: yes # roda com sudo
+      with_items:
+        - mysql-server
+        - python3-pycurl
+        - python3-mysqldb
+      
+    - name: Adicionar USER no bashrc
+      lineinfile: dest=~/.bashrc line='export USER={{ lookup('env', 'USER') }}' state=present
+
+    - name: Adicionar PASSWORD no bashrc
+      lineinfile: dest=~/.bashrc line='export PASSWORD={{ lookup('env', 'PASSWORD') }}' state=present
+
+    - name: Adicionar DATABASE_URL no bashrc
+      lineinfile: dest=~/.bashrc line='export DATABASE_URL="mysql://localhost:3306/{{ lookup('env', 'DATABASE') }}?useTimezone=true&serverTimezone=UTC"' state=present
+
+    - name: Aplicar o bashrc
+      shell: source ~/.bashrc
+      args:
+        executable: /bin/bash
+
+    - name: "Lavanta serviço do mysql"
+      become: yes
+      service:
+        name: mysql
+        state: started
+
+    - name: "Criando senha root mysql"
+      become: yes
+      mysql_user:
+        name: root
+        host: localhost
+        password: root
+        priv: "*.*:ALL,GRANT"
+        state: present
+  
+    - name: "Cria o banco de dados MySQL"
+      mysql_db:
+        name: "{{ lookup('env', 'DATABASE') }}"
+        login_user: "{{ lookup('env', 'USER') }}"
+        login_password: "{{ lookup('env', 'PASSWORD') }}"
+        state: present
+    
+    - name: "Copia dump mysql para servidor"
+      copy:
+        src: "sql/db_backup.sql"
+        dest: "/home/ubuntu/"
+      become: yes
+
+    - name: "Restore dump mysql"
+      shell: "mysql -u {{ lookup('env', 'USER') }} -p'{{ lookup('env', 'PASSWORD') }}' {{ lookup('env', 'DATABASE') }} < /home/ubuntu/db_backup.sql"
+
+# ansible-playbook -i hosts provisionar.yml -u ubuntu --private-key ~/Desktop/devops/treinamentoItau

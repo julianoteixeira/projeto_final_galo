@@ -125,4 +125,6 @@
     - name: "Instala ansible"
       shell: "sudo apt install ansible -y"
 
+    - name: "chmod para login com jenkins no docker"
+      shell: "sudo chmod 666 /var/run/docker.sock"
 
