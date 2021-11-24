@@ -95,15 +95,15 @@ resource "aws_security_group_rule" "master_k8s_ingress_ssh" {
   security_group_id = aws_security_group.acessos_g4_masters.id
 }
 
-resource "aws_security_group_rule" "master_k8s_ingress_frontend" {
-  type             = "ingress"
-  description      = "SG rule allowing Frontend SG to access Master SG."
-  from_port        = 0
-  to_port          = 0
-  protocol         = "all"
-  source_security_group_id = aws_security_group.sg_k8s_front.id
-  security_group_id = aws_security_group.acessos_g4_masters.id
-}
+# resource "aws_security_group_rule" "master_k8s_ingress_frontend" {
+#   type             = "ingress"
+#   description      = "SG rule allowing Frontend SG to access Master SG."
+#   from_port        = 0
+#   to_port          = 0
+#   protocol         = "all"
+#   source_security_group_id = aws_security_group.sg_k8s_front.id
+#   security_group_id = aws_security_group.acessos_g4_masters.id
+# }
 
 # resource "aws_security_group_rule" "master_k8s_ingress_workers" {
 #   type              = "ingress"
