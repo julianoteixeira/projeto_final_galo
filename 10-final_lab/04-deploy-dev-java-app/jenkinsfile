@@ -1,0 +1,57 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone repo infra') {
+            steps {
+                git url: 'https://github.com/guiagb/treinamentoDevOps', branch: 'main'
+            }
+        }
+        stage('Clone app dev') {
+            steps {
+                sh "rm -rf spring-web-youtube && git clone https://github.com/torneseumprogramador/spring-web-youtube/tree/deploy-docker"
+            }
+        }
+        stage('Test App') {
+            steps {
+                sh "cd spring-web-youtube && mvn test"
+            }
+        }
+        stage('Build App - Push Docker') {
+            steps {
+                sh "10-final_lab/04-deploy-dev-java-app/deploy.sh"
+            }
+        }
+        stage('Deploy DEV') {
+            steps {
+                sh "10-final_lab/04-deploy-dev-java-app/deploy.sh"
+            }
+        }
+        stage('Test deploy dev') {
+            steps {
+                sh "10-final_lab/04-deploy-dev-java-app/test.sh"
+            }
+        }
+        stage('Deploy Stage') {
+            steps {
+                sh "10-final_lab/04-deploy-dev-java-app/deploy.sh"
+            }
+        }
+        stage('Test deploy stage') {
+            steps {
+                sh "10-final_lab/04-deploy-dev-java-app/test.sh"
+            }
+        }
+        // manual step
+        stage('Deploy Prod') {
+            steps {
+                sh "10-final_lab/04-deploy-dev-java-app/deploy.sh"
+            }
+        }
+        stage('Test deploy prod') {
+            steps {
+                sh "10-final_lab/04-deploy-dev-java-app/test.sh"
+            }
+        }
+    }
+}
