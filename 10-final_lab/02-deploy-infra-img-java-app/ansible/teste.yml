@@ -8,10 +8,10 @@
       register: docker
       failed_when: docker.stdout == "0"
 
-    - name: "Valida k8s"
-      shell: systemctl status kubelet | grep running | wc -l
-      register: kubelet
-      failed_when: kubelet.stdout == "0"
+    # - name: "Valida k8s"
+    #   shell: systemctl status kubelet | grep running | wc -l
+    #   register: kubelet
+    #   failed_when: kubelet.stdout == "0"
 
     - name: "Valida Ansible"
       shell: ansibles --version | wc -l
