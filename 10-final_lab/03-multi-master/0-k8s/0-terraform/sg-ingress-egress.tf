@@ -189,7 +189,7 @@ resource "aws_security_group_rule" "hproxy_k8s_ingress_masters_2" {
   from_port        = 0
   to_port          = 0
   protocol         = "all"
-  self             = true
+  #self             = true
   #source_security_group_id = aws_security_group.acessos_g4_masters.id
   security_group_id = aws_security_group.acessos_g4_masters.id
 }
