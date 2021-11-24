@@ -185,8 +185,8 @@ resource "aws_security_group" "acessos_g4_haproxy" {
       prefix_list_ids  = []
       protocol         = "-1"
       security_groups  = [
-        #aws_security_group.acessos_g4_masters.id,
-        "sg-06e717d1573d23960",
+        aws_security_group.acessos_g4_masters.id,
+        #"sg-06e717d1573d23960",
       ]
       self             = false
       to_port          = 0
@@ -199,8 +199,8 @@ resource "aws_security_group" "acessos_g4_haproxy" {
       prefix_list_ids  = []
       protocol         = "-1"
       security_groups  = [
-        "sg-02bb7de9168555253",
-        #aws_security_group.acessos_g4_workers.id,
+        #"sg-02bb7de9168555253",
+        aws_security_group.acessos_g4_workers.id,
       ]
       self             = false
       to_port          = 0
