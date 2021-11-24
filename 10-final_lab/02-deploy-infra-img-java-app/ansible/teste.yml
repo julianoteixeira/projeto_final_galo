@@ -17,6 +17,6 @@
     #   failed_when: kubelet.stdout != "0"
 
     - name: "Valida Ansible"
-      shell: ansibles --version | grep ansible.cfg | wc -l
+      shell: ansible --version | grep ansible.cfg | wc -l
       register: ansible
       failed_when: ansible.stdout != "1"
