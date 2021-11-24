@@ -1,8 +1,4 @@
-variable "ip_haproxy" {
-  type = string
-  default = "187.3.223.136"
-  description = "Passe aqui o IP do haproxy"
-}
+
 variable "my_vpc_id" {
   type        = string
   description = "Qual é o ID da VPC?"
@@ -36,9 +32,3 @@ variable "my_key_name" {
   description = "Qual é a vpc_security_group_id?"
   #default = "g4-part"
 }
-
-#variable "my_key_dev" {
-#  type        = string
-#  description = "Key Pair para DEV"
-#}
-

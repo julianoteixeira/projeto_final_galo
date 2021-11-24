@@ -22,6 +22,7 @@ resource "aws_instance" "dev_deploy_g4" {
 resource "aws_security_group" "acesso_g4_dev" {
   name        = "acesso_g4_dev"
   description = "acesso_g4_dev inbound traffic"
+  vpc_id = var.my_vpc_id
 
   ingress = [
     {

@@ -14,7 +14,7 @@ pipeline {
         }
         stage('Test App') {
             steps {
-                sh "cd spring-web-youtube && mvn test"
+                sh "cd spring-web-youtube && ./test.sh"
             }
         }
         stage('Build App - Push Docker') {
