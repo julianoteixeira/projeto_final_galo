@@ -1,20 +1,6 @@
 #!/bin/bash
-cd 10-final_lab/02-deploy-infra-img-java-app/terraform
 
-uri=$(terraform output | grep public_ip | awk '{print $2;exit}' | sed -e "s/\",//g")
+echo "Executando os testes das ferramentas ..."
 
-echo $uri
-
-body=$(curl "http://$uri")
-
-regex='Welcome to nginx!'
-
-if [[ $body =~ $regex ]]
-then 
-    echo "::::: nginx está no ar :::::"
-    exit 0
-else
-    echo "::::: nginx não está no ar :::::"
-    exit 0
-    #exit 1
-fi
+cd 10-final_lab/02-deploy-infra-img-java-app/ansible
+ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts teste.yml -u ubuntu --private-key ~/.ssh/id_rsa
