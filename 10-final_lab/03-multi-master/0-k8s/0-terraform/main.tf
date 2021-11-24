@@ -70,6 +70,16 @@ resource "aws_security_group" "acessos_g4_masters" {
   }
 }
 
+resource "aws_security_group" "acessos_g4_master_main" {
+  name        = "k8s-g4-acessos_g4_master_main"
+  description = "acessos inbound traffic"
+  vpc_id =  var.my_vpc_id
+
+  tags = {
+    Name = "allow_ssh"
+  }
+}
+
 resource "aws_security_group" "acessos_g4_haproxy" {
   name        = "k8s-g4-haproxy"
   description = "acessos inbound traffic"

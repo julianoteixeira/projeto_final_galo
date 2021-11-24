@@ -183,27 +183,35 @@ resource "aws_security_group_rule" "worker_k8s_egress_all" {
   security_group_id = aws_security_group.acessos_g4_workers.id
 }
 
-resource "aws_security_group_rule" "hproxy_k8s_ingress_masters_2" {
+resource "aws_security_group_rule" "masters_k8s_ingress_master_main" {
   type             = "ingress"
-  description      = "Libera acesso k8s_masters"
+  description      = "SG masters to master main."
   from_port        = 0
   to_port          = 0
   protocol         = "all"
-  #self             = true
-  source_security_group_id = aws_security_group.acessos_g4_masters.id
+  source_security_group_id = aws_security_group.acessos_g4_master_main.id
   security_group_id = aws_security_group.acessos_g4_masters.id
 }
 
-  # ingress = [
-  #   {
-  #     cidr_blocks      = []
-  #     description      = "Libera acesso k8s_masters"
-  #     from_port        = 0
-  #     ipv6_cidr_blocks = []
-  #     prefix_list_ids  = []
-  #     protocol         = "-1"
-  #     security_groups  = []
-  #     self             = true
-  #     to_port          = 0
-  #   }
-  # ]
+resource "aws_security_group_rule" "master_main_k8s_ingress_haproxy" {
+  type             = "ingress"
+  description      = "SG master main to haproxy."
+  from_port        = 0
+  to_port          = 0
+  protocol         = "all"
+  source_security_group_id = aws_security_group.acessos_g4_haproxy.id
+  security_group_id = aws_security_group.acessos_g4_master_main.id
+}
+
+resource "aws_security_group_rule" "master_main_k8s_ingress_workers" {
+  type             = "ingress"
+  description      = "SG master main to workers."
+  from_port        = 0
+  to_port          = 0
+  protocol         = "all"
+  source_security_group_id = aws_security_group.acessos_g4_workers.id
+  security_group_id = aws_security_group.acessos_g4_master_main.id
+}
+
+#acessos_g4_master_main
+#acessos_g4_masters
