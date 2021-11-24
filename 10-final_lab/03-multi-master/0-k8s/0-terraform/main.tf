@@ -65,20 +65,6 @@ resource "aws_security_group" "acessos_g4_masters" {
   description = "acessos inbound traffic"
   vpc_id =  var.my_vpc_id
 
-  ingress = [
-    {
-      cidr_blocks      = []
-      description      = "Libera acesso k8s_masters"
-      from_port        = 0
-      ipv6_cidr_blocks = []
-      prefix_list_ids  = []
-      protocol         = "-1"
-      security_groups  = []
-      self             = true
-      to_port          = 0
-    }
-  ]
-
   tags = {
     Name = "allow_ssh"
   }

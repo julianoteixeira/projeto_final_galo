@@ -182,3 +182,28 @@ resource "aws_security_group_rule" "worker_k8s_egress_all" {
   ipv6_cidr_blocks  = ["::/0"]
   security_group_id = aws_security_group.acessos_g4_workers.id
 }
+
+resource "aws_security_group_rule" "hproxy_k8s_ingress_masters_2" {
+  type             = "ingress"
+  description      = "Libera acesso k8s_masters"
+  from_port        = 0
+  to_port          = 0
+  protocol         = "all"
+  self             = true
+  source_security_group_id = aws_security_group.acessos_g4_masters.id
+  security_group_id = aws_security_group.acessos_g4_masters.id
+}
+
+  # ingress = [
+  #   {
+  #     cidr_blocks      = []
+  #     description      = "Libera acesso k8s_masters"
+  #     from_port        = 0
+  #     ipv6_cidr_blocks = []
+  #     prefix_list_ids  = []
+  #     protocol         = "-1"
+  #     security_groups  = []
+  #     self             = true
+  #     to_port          = 0
+  #   }
+  # ]
