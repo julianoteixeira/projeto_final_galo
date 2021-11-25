@@ -1,9 +1,9 @@
-my_vpc_id    = "vpc-048884032b34e69f3"
-my_ami       = "ami-03868434fd0c418b0" # "ami-0862ed1aaf3b6a03a" do k8s
-my_subnet_id = "subnet-0b88dbcc48ade224a" # subnet privada para o mysql
-my_key_name  = "treinamento_itau_turma2"
+my_vpc_id    = "vpc-0d8706ec4297adc25"
+my_ami       = "ami-0cc8687ae6d1c4488" # "ami-0862ed1aaf3b6a03a" do k8s
+my_subnet_id = "subnet-0e3bcf4c3b83b4c5c" # subnet privada para o mysql
+my_key_name  = "key-par-devops"
 my_key_dev  = "ssh"
 ip_haproxy =  "187.3.223.136"
-ids_subnets = ["subnet-0c4fbeae2c11eff19","subnet-0994d90aa42640993","subnet-035f011d0f6046592"]
+ids_subnets = ["subnet-0981fcc0109d94f64","subnet-0dd91a8cd218beb0f","subnet-021ecb3ef17ead8fb"]
 tipo_master = ["t2.large","t3.large","t2.large"]
 tipo_worker = ["t2.medium","t3.medium","t2.medium"]

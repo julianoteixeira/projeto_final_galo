@@ -12,15 +12,15 @@ resource "aws_instance" "ec2_g4_myslq" {
     encrypted = true
     volume_size = 8
   }
-  count         = 1
+  for_each = toset(["dev", "stage", "prod"])
   tags = {
-    Name = "ec2_g4_mysql-${count.index}-leandsu"
+   Name = "ec2_g4_mysql-${each.key}"
   }
   vpc_security_group_ids = [aws_security_group.acessos_g4_mysql.id]
 }
 
 resource "aws_security_group" "acessos_g4_mysql" {
-  # name        = "acessos_mysql-leandsu"
+  # name        = "acessos_mysql"
   description = "acessos_mysql inbound traffic"
   vpc_id      = var.my_vpc_id
 
@@ -64,7 +64,7 @@ resource "aws_security_group" "acessos_g4_mysql" {
   ]
 
   tags = {
-    Name = "allow-mysql-leandsu"
+    Name = "allow-mysql"
   }
 }
 
