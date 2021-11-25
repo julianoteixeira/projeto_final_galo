@@ -120,5 +120,3 @@
     - name: "Permissao docker.sock"  
       shell: "chmod 666 /var/run/docker.sock"
 
-
-
