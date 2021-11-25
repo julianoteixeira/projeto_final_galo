@@ -24,7 +24,7 @@
     - name: "Aplicar hpa"
       shell: kubectl apply -f /root/k8s-deploy/7.5-hpa.yaml
 
-    - shell: "kubectl get pods | grep mysql"
+    - shell: "kubectl get pods"
       register: ps
     - debug:
         msg: " '{{ ps.stdout_lines }}' "
