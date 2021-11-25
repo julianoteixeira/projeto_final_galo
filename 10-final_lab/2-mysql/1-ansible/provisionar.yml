@@ -1,11 +1,12 @@
 - hosts: all
 
   environment:
+    DATABASE: "{{ lookup('env', 'DATABASE') }}" # SpringWebYoutube
     DATABASE_URL: "mysql://localhost:3306/{{ lookup('env', 'DATABASE') }}?useTimezone=true&serverTimezone=UTC"
     PASSWORD: "{{ lookup('env', 'PASSWORD') }}"
     USER: "{{ lookup('env', 'USER') }}"
   
-  become: yes
+  # become: yes
 
   tasks:
     - name: "Roda: sudo apt-get update"
@@ -33,6 +34,21 @@
     - name: Adicionar DATABASE_URL no bashrc
       lineinfile: dest=~/.bashrc line='export DATABASE_URL="mysql://localhost:3306/{{ lookup('env', 'DATABASE') }}?useTimezone=true&serverTimezone=UTC"' state=present
 
+    - name: Adicionar DATABASE_URL no bashrc
+      lineinfile: dest=~/.bashrc line='export DATABASE={{ lookup('env', 'DATABASE') }}' state=present
+
+    - name: Captura da variável de ambiente
+      debug:
+        msg: "'{{ lookup('env', 'PASSWORD') }}' is the PASSWORD environment variable."
+
+    - name: Captura da variável de ambiente
+      debug:
+        msg: "'{{ lookup('env', 'USER') }}' is the USER environment variable."
+
+    - name: Captura da variável de ambiente
+      debug:
+        msg: "'{{ lookup('env', 'DATABASE_URL') }}' is the DATABASE_URL environment variable."
+
     - name: Aplicar o bashrc
       shell: source ~/.bashrc
       args:
@@ -50,15 +66,28 @@
         name: root
         host: localhost
         password: root
+        # login_user: "{{ lookup('env', 'USER') }}"
+        # login_password: "{{ lookup('env', 'PASSWORD') }}"
         priv: "*.*:ALL,GRANT"
         state: present
+  
+    # - name: "Cria o banco de dados MySQL"
+    #   mysql_db:
+    #     name: "{{ lookup('env', 'DATABASE') }}"
+    #     login_user: "{{ lookup('env', 'USER') }}"
+    #     login_password: "{{ lookup('env', 'PASSWORD') }}"
+    #     state: present
   
     - name: "Cria o banco de dados MySQL"
       mysql_db:
         name: "{{ lookup('env', 'DATABASE') }}"
+        # name: SpringWebYoutube
+        # login_user: root
+        # login_password: root
         login_user: "{{ lookup('env', 'USER') }}"
         login_password: "{{ lookup('env', 'PASSWORD') }}"
         state: present
+      become: yes
     
     - name: "Copia dump mysql para servidor"
       copy:
@@ -67,6 +96,9 @@
       become: yes
 
     - name: "Restore dump mysql"
+      # shell: "mysql -u root -p ''password_mysql SpringWebYoutube < /home/ubuntu/db_backup.sql"
+      # shell: "mysql -u root -p'root' SpringWebYoutube < /home/ubuntu/db_backup.sql"
       shell: "mysql -u {{ lookup('env', 'USER') }} -p'{{ lookup('env', 'PASSWORD') }}' {{ lookup('env', 'DATABASE') }} < /home/ubuntu/db_backup.sql"
+      # shell: "mysql -u {{ lookup('env', 'USER') }} -p'{{ lookup('env', 'PASSWORD') }}' SpringWebYoutube < /home/ubuntu/db_backup.sql"
 
 # ansible-playbook -i hosts provisionar.yml -u ubuntu --private-key ~/Desktop/devops/treinamentoItau

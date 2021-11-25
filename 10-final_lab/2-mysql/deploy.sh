@@ -1,5 +1,6 @@
 #!/bin/bash
 cd 10-final_lab/2-mysql/0-terraform
+# cd 0-terraform
 terraform init
 terraform apply -auto-approve
 
@@ -24,6 +25,7 @@ $ID_M2_DNS
 $ID_M3_DNS
 " > ../1-ansible/hosts
 
-cd 10-final_lab/2-mysql/1-ansible
+# cd 10-final_lab/01-pipeline_infra/2-mysql/1-ansible
+cd ../1-ansible
 ANSIBLE_OUT=$(ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts provisionar.yml -u ubuntu --private-key ~/.ssh/id_rsa)
 echo "ANSIBLE OUT : " $ANSIBLE_OUT

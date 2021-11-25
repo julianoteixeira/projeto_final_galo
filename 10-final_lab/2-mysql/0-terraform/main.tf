@@ -3,8 +3,8 @@ provider "aws" {
 }
 
 resource "aws_instance" "ec2_g4_myslq" {
-  associate_public_ip_address = true
-  subnet_id     = var.ids_subnets[count.index]
+  # associate_public_ip_address = true
+  subnet_id     = var.my_subnet_id
   ami           = var.my_ami
   instance_type = var.tipo_worker[count.index]
   key_name      = var.my_key_name
@@ -12,15 +12,15 @@ resource "aws_instance" "ec2_g4_myslq" {
     encrypted = true
     volume_size = 8
   }
-  count         = 3
+  count         = 1
   tags = {
-    Name = "ec2_g4_mysql-${count.index}"
+    Name = "ec2_g4_mysql-${count.index}-leandsu"
   }
   vpc_security_group_ids = [aws_security_group.acessos_g4_mysql.id]
 }
 
 resource "aws_security_group" "acessos_g4_mysql" {
-  name        = "acessos_mysql"
+  # name        = "acessos_mysql-leandsu"
   description = "acessos_mysql inbound traffic"
   vpc_id      = var.my_vpc_id
 
@@ -64,13 +64,13 @@ resource "aws_security_group" "acessos_g4_mysql" {
   ]
 
   tags = {
-    Name = "allow-mysql"
+    Name = "allow-mysql-leandsu"
   }
 }
 
 output "ec2-g4-mysql" {
   value = [
-    for key, item in aws_instance.ec2_g4_myslq :
-      "ec2-g4-mysql ${key+1} - ${item.private_ip} - ssh -i ~/.ssh/id_rsa ubuntu@${item.public_dns} -o ServerAliveInterval=60"
+    for key, item in aws_instance.ec2_g4_myslq : 
+      "ec2-g4-mysql ${key+1} - ${item.private_ip} - ssh -i ~/.ssh/id_rsa ubuntu@${item.private_dns} -o ServerAliveInterval=60"
   ]
 }
