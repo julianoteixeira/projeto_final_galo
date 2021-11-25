@@ -32,7 +32,7 @@ variable "my_key_name" {
   #default = "g4-part"
 }
 
-variable "my_key_dev" {
-  type        = string
-  description = "Key Pair para DEV"
-}
+#variable "my_key_dev" {
+#  type        = string
+#  description = "Key Pair para DEV"
+#}

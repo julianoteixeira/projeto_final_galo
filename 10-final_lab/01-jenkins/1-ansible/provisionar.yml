@@ -104,9 +104,10 @@
     
     - name: "mkdir"
       shell: "mkdir /var/lib/jenkins/.ssh"
+      ignore_errors: True
 
     - copy: 
-        src: "/Users/guilhermeandre/.ssh/id_rsa" 
+        src: "~/.ssh/id_rsa" 
         dest: "/var/lib/jenkins/.ssh/id_rsa" 
         owner: jenkins 
         group: jenkins 
@@ -115,3 +116,9 @@
 
     - name: "Permissao da chave"
       shell: "chown jenkins:jenkins /var/lib/jenkins/.ssh/id_rsa"
+
+    - name: "Permissao docker.sock"  
+      shell: "chmod 666 /var/run/docker.sock"
+
+
+
