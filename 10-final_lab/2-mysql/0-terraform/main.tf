@@ -6,13 +6,12 @@ resource "aws_instance" "ec2_g4_myslq" {
   # associate_public_ip_address = true
   subnet_id     = var.my_subnet_id
   ami           = var.my_ami
-  instance_type = var.tipo_worker[count.index]
+  instance_type = var.tipo_worker[each.key]
   key_name      = var.my_key_name
   root_block_device {
     encrypted = true
     volume_size = 8
   }
-  count = 3
   for_each = toset(["dev", "stage", "prod"])
   tags = {
    Name = "ec2_g4_mysql-${each.key}"
