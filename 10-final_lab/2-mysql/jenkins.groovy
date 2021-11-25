@@ -15,13 +15,13 @@ pipeline {
     stages {
         stage('Clone Git') { 
             steps { 
-                git url: 'https://github.com/leandrosugahara/projeto_gama_academy.git', 
+                git url: 'https://github.com/julianoteixeira/spring-web-youtube.git', 
                 branch: 'main' 
             } 
         }
         stage('Build MySql') {
             steps {
-                sh "10-final_lab/01-pipeline_infra/2-mysql/deploy.sh"
+                sh "10-final_lab/2-mysql/deploy.sh"
             }
         }
     }
