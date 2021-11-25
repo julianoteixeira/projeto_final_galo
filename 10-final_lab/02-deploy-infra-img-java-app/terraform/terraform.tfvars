@@ -1,5 +1,5 @@
 my_vpc_id    = "vpc-0d8706ec4297adc25"
 my_ami       = "ami-0e66f5495b4efdd0f"
-my_subnet_id = "subnet-021ecb3ef17ead8fb"
+my_subnet_id = "subnet-0981fcc0109d94f64"
 my_key_name  = "key-par-devops"
 #my_key_dev   = "ssh-rsa"
