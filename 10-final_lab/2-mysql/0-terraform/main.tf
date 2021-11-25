@@ -12,6 +12,7 @@ resource "aws_instance" "ec2_g4_myslq" {
     encrypted = true
     volume_size = 8
   }
+  count = 3
   for_each = toset(["dev", "stage", "prod"])
   tags = {
    Name = "ec2_g4_mysql-${each.key}"

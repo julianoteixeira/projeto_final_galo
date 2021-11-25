@@ -15,7 +15,7 @@ pipeline {
     stages {
         stage('Clone Git') { 
             steps { 
-                git url: 'https://github.com/julianoteixeira/spring-web-youtube.git', 
+                git url: 'https://github.com/julianoteixeira/projeto_final_galo.git', 
                 branch: 'main' 
             } 
         }
