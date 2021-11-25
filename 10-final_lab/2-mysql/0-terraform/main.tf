@@ -6,15 +6,15 @@ resource "aws_instance" "ec2_g4_myslq" {
   # associate_public_ip_address = true
   subnet_id     = var.my_subnet_id
   ami           = var.my_ami
-  instance_type = var.tipo_worker[each.key]
+  instance_type = var.tipo_worker[count.index]
   key_name      = var.my_key_name
   root_block_device {
     encrypted = true
     volume_size = 8
   }
-  for_each = toset(["dev", "stage", "prod"])
+  count = 3
   tags = {
-   Name = "ec2_g4_mysql-${each.key}"
+   Name = "ec2_g4_mysql-${var.mysql_ambientes[count.index]}"
   }
   vpc_security_group_ids = [aws_security_group.acessos_g4_mysql.id]
 }

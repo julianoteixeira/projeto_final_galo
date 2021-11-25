@@ -149,3 +149,12 @@ variable "tipo_worker" {
 #       public_ip = bool
 #   })
 # }
+variable "mysql_ambientes" {
+  type        = list(string)
+  default     = [
+     "DEV",
+     "STAGE",
+     "PROD"
+   ]
+}
+
