@@ -2,10 +2,6 @@ provider "aws" {
   region = "sa-east-1"
 }
 
-data "http" "myip" {
-  url = "http://ipv4.icanhazip.com" # outra opção "https://ifconfig.me"
-}
-
 resource "aws_instance" "k8s_g4_proxy" {
   associate_public_ip_address = true
   subnet_id = var.my_subnet_id
