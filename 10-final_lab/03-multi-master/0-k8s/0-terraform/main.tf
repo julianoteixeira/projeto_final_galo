@@ -26,7 +26,7 @@ resource "aws_instance" "k8s_g4_masters" {
   associate_public_ip_address = true
   subnet_id = var.my_subnet_id
   ami           = var.my_ami
-  instance_type = "t2.large"
+  instance_type = "t2.medium"
   key_name      = var.my_key_name
   root_block_device {
     encrypted = true
